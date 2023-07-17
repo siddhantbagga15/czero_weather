@@ -41,6 +41,11 @@ class SaveFavoriteOutput:
     id: str
 
 @strawberry.type
+class GetFavoritesOutput:
+    weatherFavorites: List[Weather]
+    page: int
+
+@strawberry.type
 class Query:
     @strawberry.field
     def getWeather(self, city: str, date: date) -> Weather:
@@ -51,16 +56,16 @@ class Query:
         return getWeatherDataMapOutput(city, date)
 
     @strawberry.field
-    def getWeatherFavorites(self) -> List[Weather]:
-        return getWeatherFavoritesByField()
+    def getWeatherFavorites(self, page: int, limit: int) -> GetFavoritesOutput:
+        return getWeatherFavoritesByField(page, limit)
     
     @strawberry.field
-    def getWeatherFavoritesByCity(self, city: str) -> List[Weather]:
-        return getWeatherFavoritesByField("city", city)
+    def getWeatherFavoritesByCity(self, city: str, page: int, limit: int) -> GetFavoritesOutput:
+        return getWeatherFavoritesByField(page, limit, "city", city)
 
     @strawberry.field
-    def getWeatherFavoritesByDate(self, date: str) -> List[Weather]:
-        return getWeatherFavoritesByField("date", date)
+    def getWeatherFavoritesByDate(self, date: str, page: int, limit: int) -> GetFavoritesOutput:
+        return getWeatherFavoritesByField(page, limit, "date", date)
 
 @strawberry.type
 class Mutation:
@@ -124,24 +129,26 @@ def getWeatherDataMapOutput(city: str, date: date) -> JSON:
         time = timeStr.split()[1]
         temperature = hour["temp_f"]
         humidity = hour["humidity"]
-        weatherEntry = {"temperature": temperature, "humidity":humidity}
+        weatherEntry = {"temperature": temperature, "humidity": humidity}
         hourlyData[time]=weatherEntry
     
 
-    output = {
+    result = {
         "city": city,
         "date": date,
         "hourlyData": hourlyData
     }
-    return output
+    return result
 
-def getWeatherFavoritesByField(field: Optional[str] = None, value: Optional[str] = None) -> List[Weather]:
+def getWeatherFavoritesByField(page: int = 1, limit: int = 10, 
+                field: Optional[str] = None, value: Optional[str] = None) -> GetFavoritesOutput:
     weatherFavorites = []
     query = {}
     if field and value:
         query[field] = value
     try:
-        favorites = collection.find(query)
+        skip = (page - 1) * limit
+        favorites = collection.find(query).skip(skip).limit(limit)
     except Exception as e:
         raise Exception("Failed to retrieve weather favorites")
 
@@ -157,7 +164,8 @@ def getWeatherFavoritesByField(field: Optional[str] = None, value: Optional[str]
             for weather_entry in favorite["hourlyData"]
         ]
         weatherFavorites.append(Weather(city=city, date=date, hourlyData=hourlyData))
-    return weatherFavorites
+    result = GetFavoritesOutput(weatherFavorites=weatherFavorites, page=page)
+    return result
 
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)
