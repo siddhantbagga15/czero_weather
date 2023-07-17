@@ -20,7 +20,7 @@ This project provides a GraphQL API for retrieving weather data based on city an
 
 1. Clone the repository:
 
-git clone git@github.com:siddhantbagga15/czero_weather.git
+`git clone git@github.com:siddhantbagga15/czero_weather.git`
 
 2. Install dependencies
 
@@ -51,7 +51,7 @@ query {
 }
 ```
 
-### Get Weather Map Output
+### Get Weather Data - Map Output
 
 In addition to the previous query, you can also retrieve weather data in a map-like format using the `getWeatherMapOutput` query. This query returns weather data grouped by time, with each time as the key and the corresponding temperature and humidity as values. This map-like output allows for efficient data retrieval. With this format, you can directly access weather data for a specific time without needing to iterate through an array or list of hourly data. This can be particularly useful when you are interested in analyzing or displaying weather information for a specific point in time. Moreover, this map-like format provides flexibility in visualizing weather data. You can create visualizations that showcase temperature and humidity changes over time, such as line charts or graphs, by utilizing the data structure returned by the getWeatherMapOutput query.
 
