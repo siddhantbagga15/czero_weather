@@ -37,7 +37,7 @@ git clone git@github.com:siddhantbagga15/czero_weather.git
 ### Get Weather Data
 
 To retrieve weather data for a specific city and date, use the following query:
-
+```
 query {
   getWeather(city: "CityName", date: "YYYY-MM-DD") {
     city
@@ -49,6 +49,7 @@ query {
     }
   }
 }
+```
 
 ### Get Weather Map Output
 
@@ -87,6 +88,7 @@ Output would be something like the following:
 
 To save your favorite weather data, use the following mutation:
 
+```
 mutation {
   saveFavorite(weather: {
     city: "CityName"
@@ -103,6 +105,7 @@ mutation {
     id
   }
 }
+```
 
 This returns the id of the document inserted in MongoDB database. 
 
@@ -110,6 +113,7 @@ This returns the id of the document inserted in MongoDB database.
 
 To retrieve weather data of your favorites, use the following query:
 
+```
 query {
   getWeatherFavorites(page:pageNumber, limit:itemLimit) {
     weatherFavorites {
@@ -124,14 +128,14 @@ query {
     page
   }
 }
-
+```
 This will return a list of your favorite weather data items, including city, date, and hourly temperature and humidity. Adjust the page and limit parameters as needed for pagination.
 
 ### Get Weather Favorites by City
 
 To retrieve weather data of your saved favorites based on a specific city, use the `getWeatherFavoritesByCity` query. Example is as follows:
 
-graphql
+```
 query {
   getWeatherFavoritesByCity(city: "CityName", page: 1, limit: 10) {
     weatherFavorites {
@@ -146,6 +150,7 @@ query {
     page
   }
 }
+```
 
 The page field in the response indicates the current page number, allowing you to implement pagination.
 
@@ -153,6 +158,7 @@ The page field in the response indicates the current page number, allowing you t
 
 To retrieve weather data of your saved favorites based on a specific date, use the `getWeatherFavoritesByDate` query. Example is as follows:
 
+```
 query {
   getWeatherFavoritesByDate(date: "YYYY-MM-DD", page: 1, limit: 10) {
     weatherFavorites {
@@ -167,6 +173,7 @@ query {
     page
   }
 }
+```
 
 ### Pagination
 
