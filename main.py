@@ -75,9 +75,12 @@ class Mutation:
         "date": weather.date,
         "hourlyData": [{"time": entry.time, "temperature": entry.temperature, "humidity": entry.humidity} for entry in weather.hourlyData],
         }     
-        insertResult = collection.insert_one(favorite)
-        id = str(insertResult.inserted_id)
-        return SaveFavoriteOutput(id=id)
+        try:
+            insertResult = collection.insert_one(favorite)
+            id = str(insertResult.inserted_id)
+            return SaveFavoriteOutput(id=id)
+        except Exception as e:
+            raise Exception("Failed to save favorite")
 
 def getWeatherData(city: str, date: date) -> Weather:
     url = f"{WEATHER_API_URL_PREFIX}key={API_KEY}&q={city}&dt={date}"
@@ -137,9 +140,11 @@ def getWeatherFavoritesByField(field: Optional[str] = None, value: Optional[str]
     query = {}
     if field and value:
         query[field] = value
-    print(query)
-    favorites = collection.find(query)
-    print(favorites)
+    try:
+        favorites = collection.find(query)
+    except Exception as e:
+        raise Exception("Failed to retrieve weather favorites")
+
     for favorite in favorites:
         city = favorite["city"]
         date = favorite["date"]
