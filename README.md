@@ -56,9 +56,11 @@ In addition to the previous query, you can also retrieve weather data in a map-l
 
 To retrieve weather data in map format for a specific city and date, use the following query:
 
+```
 query {
   getWeatherMapOutput(city: "CityName", date: "YYYY-MM-DD")
 }
+```
 
 Output would be something like the following:
 
