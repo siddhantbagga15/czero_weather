@@ -141,7 +141,7 @@ def getWeatherDataMapOutput(city: str, date: date) -> JSON:
     return result
 
 def getWeatherFavoritesByField(page: int = 1, limit: int = 10, 
-                field: Optional[str] = None, value: Optional[str] = None) -> GetFavoritesOutput:
+                field: str = None, value: str = None) -> GetFavoritesOutput:
     weatherFavorites = []
     query = {}
     if field and value:
